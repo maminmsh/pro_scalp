@@ -6,21 +6,24 @@ import get_data as gd
 from app import pro_scalper_ai
 
 
-# تابع برای تبدیل timestamp به تاریخ و ساعت جلالی
 def add_jalali_datetime(df):
     """
-    اضافه کردن ستون‌های تاریخ و ساعت جلالی به DataFrame
-    :param df: DataFrame با ایندکس timestamp
-    :return: DataFrame با ستون‌های jalali_date و jalali_time
+    اضافه کردن ستون‌های تاریخ و ساعت جلالی به DataFrame با ایندکس datetime
     """
     df = df.copy()
-    df['jalali_date'] = pd.to_datetime(df.index).map(
+
+    # اطمینان از اینکه ایندکس از نوع datetime میلادی است
+    if not pd.api.types.is_datetime64_any_dtype(df.index):
+        df.index = pd.to_datetime(df.index, unit='ms')  # ← یا unit='ms' اگر داده‌ها به میلی‌ثانیه هستند
+
+    df['jalali_date'] = df.index.map(
         lambda x: jdatetime.datetime.fromgregorian(datetime=x).strftime('%Y/%m/%d')
     )
-    df['jalali_time'] = pd.to_datetime(df.index).map(
+    df['jalali_time'] = df.index.map(
         lambda x: jdatetime.datetime.fromgregorian(datetime=x).strftime('%H:%M:%S')
     )
     return df
+
 
 
 
@@ -121,13 +124,13 @@ if __name__ == "__main__":
     print(results.tail())
 
     # # اضافه کردن تاریخ و ساعت جلالی
-    # results = add_jalali_datetime(results)
-    #
+    results = add_jalali_datetime(results)
+
     # # ذخیره نتایج در جدول signals
-    # save_to_sqlite(results, db_name="trading_data.db", table_name="signals")
+    save_to_sqlite(results, db_name="trading_data.db", table_name="signals")
     #
     # # ذخیره تغییرات سیگنال در جدول signal_changes
-    # save_signal_changes(results, db_name="trading_data.db", table_name="signal_changes")
+    save_signal_changes(results, db_name="trading_data.db", table_name="signal_changes")
     #
     # # بازیابی داده‌ها برای بررسی
     # loaded_df = load_from_sqlite(db_name="trading_data.db", table_name="signals")
