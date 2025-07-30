@@ -87,6 +87,7 @@ def load_from_sqlite(db_name="trading_data.db", table_name="signals"):
     return df
 
 
+
 # 📌 اجرای نمونه‌ها:
 if __name__ == "__main__":
     # گرفتن 1000 کندل 5m آخر
