@@ -23,6 +23,7 @@ def add_jalali_datetime(df):
     return df
 
 
+
 # تابع برای ذخیره DataFrame در SQLite
 def save_to_sqlite(df, db_name="trading_data.db", table_name="signals"):
     """
