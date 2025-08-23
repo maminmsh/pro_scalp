@@ -4,7 +4,7 @@ from ta.trend import ADXIndicator, EMAIndicator
 from ta.momentum import RSIIndicator, WilliamsRIndicator
 from ta.volatility import AverageTrueRange
 from ta.volume import OnBalanceVolumeIndicator
-import config  # Importing configuration variables
+import config
 
 
 # ─────────────────────────────────────────────

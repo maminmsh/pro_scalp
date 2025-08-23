@@ -25,8 +25,6 @@ def add_jalali_datetime(df):
     return df
 
 
-
-
 # تابع برای ذخیره DataFrame در SQLite
 def save_to_sqlite(df, db_name="trading_data.db", table_name="signals"):
     """
@@ -54,6 +52,30 @@ def save_to_sqlite(df, db_name="trading_data.db", table_name="signals"):
 
 
 # تابع برای ذخیره تغییرات سیگنال در جدول جداگانه
+# def save_signal_changes(df, db_name="trading_data.db", table_name="signal_changes"):
+#     """
+#     ذخیره تغییرات سیگنال در جدول جداگانه
+#     :param df: DataFrame حاوی سیگنال‌ها
+#     :param db_name: نام فایل پایگاه داده
+#     :param table_name: نام جدول تغییرات سیگنال
+#     """
+#     # تشخیص تغییرات سیگنال
+#     df['signal_change'] = df['stored_signal'].ne(df['stored_signal'].shift(1))
+#     signal_changes = df[df['signal_change']][['stored_signal', 'close']]
+#     signal_changes = signal_changes.rename(columns={'stored_signal': 'signal', 'close': 'price'})
+#
+#     # اضافه کردن تاریخ و ساعت جلالی
+#     signal_changes = add_jalali_datetime(signal_changes)
+#
+#     # ذخیره در جدول
+#     conn = sqlite3.connect(db_name)
+#     signal_changes[['signal', 'price', 'jalali_date', 'jalali_time']].to_sql(
+#         table_name, conn, if_exists='append', index=True, index_label='timestamp'
+#     )
+#     conn.close()
+#     print(f"تغییرات سیگنال در جدول '{table_name}' ذخیره شدند.")
+
+
 def save_signal_changes(df, db_name="trading_data.db", table_name="signal_changes"):
     """
     ذخیره تغییرات سیگنال در جدول جداگانه
@@ -63,15 +85,38 @@ def save_signal_changes(df, db_name="trading_data.db", table_name="signal_change
     """
     # تشخیص تغییرات سیگنال
     df['signal_change'] = df['stored_signal'].ne(df['stored_signal'].shift(1))
-    signal_changes = df[df['signal_change']][['stored_signal', 'close']]
+
+    # فقط سیگنال‌هایی که تغییر کردند و "No Signal" نیستند
+    signal_changes = df[df['signal_change'] & (df['stored_signal'] != "No Signal")][['stored_signal', 'close']]
     signal_changes = signal_changes.rename(columns={'stored_signal': 'signal', 'close': 'price'})
+
+    # درصد تغییرات قیمت نسبت به ردیف قبلی
+    signal_changes['price_pct_change'] = signal_changes['price'].pct_change() * 100
+    signal_changes['price_pct_change'] = signal_changes['price_pct_change'].fillna(0)
+
+    # تعیین درست یا غلط بودن سیگنال نسبت به نوع آن
+    def check_signal(row, prev_price):
+        if prev_price is None:
+            return 1  # اولین ردیف را درست فرض می‌کنیم
+        if row['signal'] in ["Strong Buy", "Early Buy"]:
+            return 1 if row['price'] > prev_price else 0
+        elif row['signal'] in ["Strong Sell", "Early Sell"]:
+            return 1 if row['price'] < prev_price else 0
+        return 0
+
+    prev_price = None
+    correct_list = []
+    for idx, row in signal_changes.iterrows():
+        correct_list.append(check_signal(row, prev_price))
+        prev_price = row['price']
+    signal_changes['correct'] = correct_list
 
     # اضافه کردن تاریخ و ساعت جلالی
     signal_changes = add_jalali_datetime(signal_changes)
 
     # ذخیره در جدول
     conn = sqlite3.connect(db_name)
-    signal_changes[['signal', 'price', 'jalali_date', 'jalali_time']].to_sql(
+    signal_changes[['signal', 'price', 'price_pct_change', 'correct', 'jalali_date', 'jalali_time']].to_sql(
         table_name, conn, if_exists='append', index=True, index_label='timestamp'
     )
     conn.close()
