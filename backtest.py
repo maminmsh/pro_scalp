@@ -60,14 +60,15 @@ def backtest(capital, leverage, fee_rate, loss_limit, include_early,
                 icon = "🟢🟢🟢" if pnl > 0 else "🔴🔴🔴"
 
                 print(f"""
-📌 معامله بسته شد:
-سیگنال: {open_trade['signal']} → {signal}
-شروع: {entry_price:.2f} | پایان: {exit_price:.2f}
-زمان ورود: {open_trade['jdate']} {open_trade['jtime']}
-زمان خروج: {jdate} {jtime}
-سود/ضرر: {pnl:.2f} USD ({pnl / init_capital * 100:.2f}%) 
-سرمایه فعلی: {capital:.2f} USD
-{icon} {i}
+                    📌 معامله بسته شد:
+                    سیگنال: {open_trade['signal']} → {signal}
+                    شروع: {entry_price:.2f} | پایان: {exit_price:.2f}
+                    زمان ورود: {open_trade['jdate']} {open_trade['jtime']}
+                    زمان خروج: {jdate} {jtime}
+                     fee: {fee:.2f} USD
+                    سود/ضرر: {pnl:.2f} USD ({pnl / init_capital * 100:.2f}%) 
+                    سرمایه فعلی: {capital:.2f} USD
+                    {icon} {i}
                 """)
 
                 # باز کردن معامله جدید فقط اگر سیگنال Buy یا Sell باشد
@@ -153,7 +154,15 @@ def backtest(capital, leverage, fee_rate, loss_limit, include_early,
 #                               "jdate": jdate, "jtime": jtime, "timestamp": row["timestamp"]}
 
 if __name__ == "__main__":
-    backtest(capital=200, leverage=5, fee_rate=0.002, loss_limit=0.2,
-             include_early=False,
-             take_profit_pct=0.02,
-             stop_loss_pct=0.03)
+    leverage = 3
+    fee_rates = {1: 0.0005, 2: 0.001,3:0.0015, 5: 0.0025, 10: 0.005, 20: 0.01, 50: 0.025, 100 :0.02}
+
+    backtest(
+        capital=200, leverage=leverage, fee_rate=fee_rates.get(leverage, 1e-16),
+        loss_limit=0.2, include_early=False,
+        take_profit_pct=0.08, stop_loss_pct=0.04)
+
+    # backtest(capital=100, leverage=5, fee_rate=0.0002, loss_limit=0.2,
+    #          include_early=False,
+    #          take_profit_pct=0.08,
+    #          stop_loss_pct=0.04)
