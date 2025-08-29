@@ -9,19 +9,12 @@ from test import test_barayand_signal_change
 if __name__ == "__main__":
     # not live
     print('--------start-------')
-    # main_with_sqlite()
+    main_with_sqlite()
     test_barayand_signal_change()
     backtest_run()
     print('------finish-------')
 
     # live
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('3333333333333333333333333333333333333')
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('BBBBBBBBBBBBBBBBB')
-    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('XXXXXXXXXXXXXXXXXXXXXXX')
     # asyncio.run(main_live_websocket('BTC/USDT'))
 
