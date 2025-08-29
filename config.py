@@ -56,7 +56,8 @@ maxTrendFactor = 1.5            # Max Trend Factor
 volLookback = 50                # Volume Lookback
 
 # AI Forecast Parameters
-useAI = False                   # Use AI Forecast?
+useAI = True                   # Use AI Forecast?
+# useAI = False                   # Use AI Forecast?
 ai_length = 20                  # AI Length
 ai_future = 2                   # AI Forecast Bars Ahead
 aiAdjustment = 1.5              # AI Threshold Shift

@@ -153,14 +153,15 @@ def backtest(capital, leverage, fee_rate, loss_limit, include_early,
 #                 open_trade = {"signal": signal, "price": price,
 #                               "jdate": jdate, "jtime": jtime, "timestamp": row["timestamp"]}
 
-if __name__ == "__main__":
-    leverage = 3
+# if __name__ == "__main__":
+def backtest_run():
+    leverage = 5
     fee_rates = {1: 0.0005, 2: 0.001,3:0.0015, 5: 0.0025, 10: 0.005, 20: 0.01, 50: 0.025, 100 :0.02}
 
     backtest(
-        capital=200, leverage=leverage, fee_rate=fee_rates.get(leverage, 1e-16),
+        capital=200, leverage=leverage, fee_rate=fee_rates.get(leverage),
         loss_limit=0.2, include_early=False,
-        take_profit_pct=0.08, stop_loss_pct=0.04)
+        take_profit_pct=0.02, stop_loss_pct=0.03)
 
     # backtest(capital=100, leverage=5, fee_rate=0.0002, loss_limit=0.2,
     #          include_early=False,

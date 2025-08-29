@@ -1,10 +1,25 @@
 import asyncio
+import time
+
+import ccxt.pro
 import pandas as pd
 import sqlite3
 import jdatetime
 import get_data as gd
 from app import pro_scalper_ai
+import requests
 
+TELEGRAM_TOKEN = "7404584711:AAGdB5l-ekkYmxOibWh0-D6t7CCLZptJZv4"
+CHAT_ID = -1003023688443
+
+
+def send_telegram(message):
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    data = {"chat_id": CHAT_ID, "text": message}
+    try:
+        requests.post(url, data=data)
+    except Exception as e:
+        print("Telegram error:", e)
 
 def add_jalali_datetime(df):
     """
@@ -134,7 +149,8 @@ def load_from_sqlite(db_name="trading_data.db", table_name="signals"):
 
 
 # 📌 اجرای نمونه‌ها:
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def main_with_sqlite():
     # گرفتن 1000 کندل 5m آخر
     candles = gd.get_historical_ohlcv(limit=1000)
     print("نمونه کندل:", candles[-1])
@@ -189,3 +205,61 @@ if __name__ == "__main__":
 
     # اجرای WebSocket به صورت async
     # asyncio.run(gd.watch_ticker())
+
+
+
+if __name__ == "__main__":
+
+    async def main_live_websocket(symbol='BTC/USDT'):
+        exchange = ccxt.pro.binance()
+        try:
+            while True:
+                try:
+                    ticker = await exchange.watch_ticker(symbol)
+
+                    # ساخت DataFrame از داده لحظه‌ای
+                    df = pd.DataFrame([{
+                        'timestamp': ticker['timestamp'],
+                        'open': ticker['open'],
+                        'high': ticker['high'],
+                        'low': ticker['low'],
+                        'close': ticker['last'],
+                        'volume': ticker['baseVolume']
+                    }])
+
+
+                    df.set_index('timestamp', inplace=True)
+                    df_ohlcv = df[['open','high','low','close','volume']].astype(float)
+
+
+                    loaded_df = load_from_sqlite(db_name="trading_data.db", table_name="signals")
+                    # print(df_ohlcv)
+                    # print('sssssss')
+                    # print(loaded_df)
+
+                    # print('ssssssssssss')
+                    # پردازش با الگوریتم Pro Scalper AI
+                    # results = pro_scalper_ai(df_ohlcv)
+                    results = pro_scalper_ai(loaded_df)
+                    # print(results)
+                    # results = add_jalali_datetime(results)
+
+                    # print(results)
+
+                    # ذخیره در SQLite
+                    # save_to_sqlite(results, db_name="trading_data.db", table_name="signals")
+                    # save_signal_changes(results, db_name="trading_data.db", table_name="signal_changes")
+
+                    # ارسال آخرین سیگنال به تلگرام
+                    send_telegram(f"📊 سیگنال جدید:\n{results.tail()}")
+
+                except Exception as e:
+                    send_telegram(f"❌ خطا در پردازش ticker: {str(e)}")
+                    await asyncio.sleep(5)  # زمان کوتاه برای retry
+
+        except Exception as e:
+            send_telegram(f"❌ خطای WebSocket: {str(e)}")
+        finally:
+            await exchange.close()
+
+    asyncio.run(main_live_websocket('BTC/USDT'))

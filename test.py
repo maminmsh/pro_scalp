@@ -11,7 +11,8 @@ def load_from_sqlite(db_name="trading_data.db", table_name="signal_changes"):
     conn.close()
     return df
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def test_barayand_signal_change():
 
     df = load_from_sqlite()
     price_pct_change = df['price_pct_change']
