@@ -152,7 +152,7 @@ def load_from_sqlite(db_name="trading_data.db", table_name="signals"):
 # if __name__ == "__main__":
 def main_with_sqlite():
     # گرفتن 1000 کندل 5m آخر
-    candles = gd.get_historical_ohlcv(limit=1000)
+    candles = gd.get_historical_ohlcv(limit=1000,timeframe='1h')
     print("نمونه کندل:", candles[-1])
 
     # گرفتن کندل از بازه تاریخی مشخص
@@ -179,6 +179,7 @@ def main_with_sqlite():
 
     # پر کردن مقادیر گم‌شده (در صورت وجود)
     # df_ohlcv = df_ohlcv.fillna(method='ffill')
+
 
     # اجرای تابع pro_scalper_ai
     results = pro_scalper_ai(df_ohlcv)
