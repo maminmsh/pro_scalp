@@ -1,12 +1,12 @@
 # Configuration file for Pro Scalper AI parameters
 
 # Higher Timeframe Trend Filter
-useHTF = True                  # Use Higher Timeframe Trend Filter?
+useHTF = False                  # Use Higher Timeframe Trend Filter?
 htf_tf = "15"                   # HTF timeframe (e.g., "15" for 15 minutes)
 
 # MACD and Pinbar Filters
-useMACDFilter = True           # Use MACD Filter?
-usePinbarFilter = True         # Use Pinbar Filter?
+useMACDFilter = False           # Use MACD Filter?
+usePinbarFilter = False         # Use Pinbar Filter?
 
 # Indicator Lengths
 adxLen = 14                     # ADX Length
@@ -15,8 +15,7 @@ atrLen = 14                     # ATR Length
 hmaLen = 21                     # HMA Length
 
 # Momentum Mode
-# momChoice = "Stochastic RSI"    # Momentum Mode: "Stochastic RSI", "Fisher RSI", or "Williams %R"
-momChoice = "Fisher RSI"    # Momentum Mode: "Stochastic RSI", "Fisher RSI", or "Williams %R"
+momChoice = "Stochastic RSI"    # Momentum Mode: "Stochastic RSI", "Fisher RSI", or "Williams %R"
 
 # Stochastic RSI Parameters
 stochRsiLen = 12                # Stoch RSI Length
@@ -58,7 +57,7 @@ volLookback = 50                # Volume Lookback
 
 # AI Forecast Parameters
 useAI = True                   # Use AI Forecast?
-# useAI = True                   # Use AI Forecast?
+# useAI = False                   # Use AI Forecast?
 ai_length = 20                  # AI Length
 ai_future = 2                   # AI Forecast Bars Ahead
 aiAdjustment = 1.5              # AI Threshold Shift

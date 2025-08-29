@@ -16,5 +16,12 @@ if __name__ == "__main__":
 
     # live
     send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('3333333333333333333333333333333333333')
+    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('BBBBBBBBBBBBBBBBB')
+    send_telegram('BBBBBBBBBBBBBBBBB')
     # asyncio.run(main_live_websocket('BTC/USDT'))
 
