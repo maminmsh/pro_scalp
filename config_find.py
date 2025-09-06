@@ -42,7 +42,7 @@ from ta.volatility import AverageTrueRange
 # ====== IMPORT YOUR MODULES ======
 # They must be importable in your environment.
 import config  # your config file
-from app import pro_scalper_ai  # <-- change to actual import path
+from pro_scalp import pro_scalper_ai  # <-- change to actual import path
 
 
 # ─────────────────────────────────────────────

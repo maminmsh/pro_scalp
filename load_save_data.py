@@ -2,7 +2,7 @@ import asyncio
 import pandas as pd
 import sqlite3
 import get_data as gd
-from app import pro_scalper_ai
+from pro_scalp import pro_scalper_ai
 
 
 # تابع برای ذخیره DataFrame در SQLite

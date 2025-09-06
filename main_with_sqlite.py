@@ -6,7 +6,7 @@ import pandas as pd
 import sqlite3
 import jdatetime
 import get_data as gd
-from app import pro_scalper_ai
+from pro_scalp import pro_scalper_ai
 import requests
 
 TELEGRAM_TOKEN = "7404584711:AAGdB5l-ekkYmxOibWh0-D6t7CCLZptJZv4"

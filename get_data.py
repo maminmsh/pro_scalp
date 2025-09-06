@@ -46,35 +46,57 @@ def get_historical_ohlcv_df(symbol='BTC/USDT', timeframe='5m', limit=1000):
     exchange = ccxt.binance()
     exchange.load_markets()
 
+    # گرفتن داده‌ها
     candles = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
+
+    # ساخت DataFrame
     df = pd.DataFrame(candles, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+
+    # تبدیل timestamp از میلی‌ثانیه به datetime
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 
     # تنظیم ایندکس به timestamp
     df.set_index('timestamp', inplace=True)
 
-    # حذف ستون‌های غیرضروری
-    df_ohlcv = df[['open', 'high', 'low', 'close', 'volume']]
+    # انتخاب ستون‌های مورد نیاز و تبدیل به float
+    df_ohlcv = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
 
-    # اطمینان از اینکه داده‌ها به نوع عددی تبدیل شده‌اند
-    df_ohlcv = df_ohlcv.astype({
-        'open': float,
-        'high': float,
-        'low': float,
-        'close': float,
-        'volume': float
-    })
-    df_ohlcv =ensure_datetime_index(df_ohlcv)
     return df_ohlcv
 
 
-def ensure_datetime_index(df):
-    if not isinstance(df.index, (pd.DatetimeIndex, pd.TimedeltaIndex, pd.PeriodIndex)):
-        if 'time' in df.columns:
-            df['time'] = pd.to_datetime(df['time'])
-            df = df.set_index('time')
-        elif 'date' in df.columns:
-            df['date'] = pd.to_datetime(df['date'])
-            df = df.set_index('date')
-        else:
-            raise ValueError("No datetime column found to set as index")
-    return df
+# def get_historical_ohlcv_df(symbol='BTC/USDT', timeframe='5m', limit=1000):
+#     exchange = ccxt.binance()
+#     exchange.load_markets()
+#
+#     candles = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
+#     df = pd.DataFrame(candles, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+#
+#     # تنظیم ایندکس به timestamp
+#     df.set_index('timestamp', inplace=True)
+#
+#     # حذف ستون‌های غیرضروری
+#     df_ohlcv = df[['open', 'high', 'low', 'close', 'volume']]
+#
+#     # اطمینان از اینکه داده‌ها به نوع عددی تبدیل شده‌اند
+#     df_ohlcv = df_ohlcv.astype({
+#         'open': float,
+#         'high': float,
+#         'low': float,
+#         'close': float,
+#         'volume': float
+#     })
+#     df_ohlcv =ensure_datetime_index(df_ohlcv)
+#     return df_ohlcv
+#
+#
+# def ensure_datetime_index(df):
+#     if not isinstance(df.index, (pd.DatetimeIndex, pd.TimedeltaIndex, pd.PeriodIndex)):
+#         if 'time' in df.columns:
+#             df['time'] = pd.to_datetime(df['time'])
+#             df = df.set_index('time')
+#         elif 'date' in df.columns:
+#             df['date'] = pd.to_datetime(df['date'])
+#             df = df.set_index('date')
+#         else:
+#             raise ValueError("No datetime column found to set as index")
+#     return df
