@@ -161,7 +161,7 @@ def backtest_run():
     backtest(
         capital=200, leverage=leverage, fee_rate=fee_rates.get(leverage),
         loss_limit=0.2, include_early=True,
-        take_profit_pct=0.08, stop_loss_pct=0.02)
+        take_profit_pct=0.08, stop_loss_pct=0.03)
 
     # backtest(capital=100, leverage=5, fee_rate=0.0002, loss_limit=0.2,
     #          include_early=False,

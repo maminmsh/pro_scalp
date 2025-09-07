@@ -42,7 +42,7 @@ from ta.volatility import AverageTrueRange
 # ====== IMPORT YOUR MODULES ======
 # They must be importable in your environment.
 import config  # your config file
-from pro_scalp import pro_scalper_ai  # <-- change to actual import path
+from pro_scalp2 import pro_scalper_ai2  # <-- change to actual import path
 
 
 # ─────────────────────────────────────────────
@@ -181,7 +181,7 @@ def _build_signals(df_base: pd.DataFrame,
     set_config(params)
 
     # Base timeframe signals
-    base = pro_scalper_ai(df_base, htf_data=df_htf)
+    base = pro_scalper_ai2(df_base, htf_data=df_htf)
     base = base.copy()
     base['base_signal'] = base['stored_signal']
 
@@ -189,7 +189,7 @@ def _build_signals(df_base: pd.DataFrame,
     if params.get('use_ltf', False) and df_ltf is not None:
         # run same config on ltf (no extra HTF for ltf to simplify)
         set_config(params)  # ensure same state
-        ltf = pro_scalper_ai(df_ltf)
+        ltf = pro_scalper_ai2(df_ltf)
         # align onto base index by last-known value (ffill after reindex)
         ltf_sig = ltf['stored_signal'].reindex(base.index, method='pad')
         base['ltf_signal'] = ltf_sig
